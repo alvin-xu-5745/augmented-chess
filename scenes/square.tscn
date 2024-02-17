@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://defpx8y5ac5tw"]
+
+[ext_resource type="PackedScene" uid="uid://ninlacko26y7" path="res://scenes/piece.tscn" id="1_5suw7"]
+
+[node name="Square" type="ColorRect"]
+custom_minimum_size = Vector2(48, 48)
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.854902, 0.647059, 0.12549, 1)
+
+[node name="Piece" parent="." instance=ExtResource("1_5suw7")]
+layout_mode = 0
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
