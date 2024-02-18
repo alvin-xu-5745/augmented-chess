@@ -7,3 +7,12 @@
 script = ExtResource("1_xh2l6")
 
 [node name="Board" parent="." instance=ExtResource("1_wy04v")]
+
+[node name="c8" parent="Board/rank8" index="2"]
+color = Color(0.913725, 0.854902, 0.729412, 1)
+
+[node name="c7" parent="Board/rank7" index="2"]
+color = Color(0.764706, 0.6, 0.352941, 1)
+
+[editable path="Board"]
+[editable path="Board/rank8/a8"]

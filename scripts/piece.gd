@@ -1,33 +1,45 @@
 extends Node
 
-const sprites = {
-	"bb": preload("res://sprites/pieces/bb.png"),
-	"bk": preload("res://sprites/pieces/bk.png"),
-	"bn": preload("res://sprites/pieces/bn.png"),
-	"bp": preload("res://sprites/pieces/bp.png"),
-	"bq": preload("res://sprites/pieces/bq.png"),
-	"br": preload("res://sprites/pieces/br.png"),
-	"wb": preload("res://sprites/pieces/wb.png"),
-	"wk": preload("res://sprites/pieces/wk.png"),
-	"wn": preload("res://sprites/pieces/wn.png"),
-	"wp": preload("res://sprites/pieces/wp.png"),
-	"wq": preload("res://sprites/pieces/wq.png"),
-	"wr": preload("res://sprites/pieces/wr.png")
-}
-
-var type
-var loc
+var type = null
+var loc = null
 
 func set_type(name):
 	type = name
-	$Sprite.texture = sprites[name]
 	
-func clear_type():
-	type = ""
-	$Sprite.texture = null
-
 func set_location(location):
 	loc = location
+	
+func clear():
+	type = null
+	loc = null
+	
+func is_valid_move(new_loc):
+	match type:
+		'b_pawn':
+			return
+		'b_rook':
+			return
+		'b_knight':
+			return
+		'b_bishop':
+			return
+		'b_queen':
+			return
+		'b_king':
+			return
+		'w_pawn':
+			return
+		'w_rook':
+			return
+		'w_knight':
+			return
+		'w_bishop':
+			return
+		'w_queen':
+			return
+		'w_king':
+			return
+		
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

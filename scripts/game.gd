@@ -1,53 +1,90 @@
 extends Node
 
+# Light color: #e9daba
+# Dark color: #c3995a
+
 var piece_scene = preload("res://scenes/piece.tscn")
+
+var curr_selection = null
 
 func init_board():
 	# Rank 1
-	$Board/rank1/a1/Piece.set_type('wr')
-	$Board/rank1/b1/Piece.set_type('wn')
-	$Board/rank1/c1/Piece.set_type('wb')
-	$Board/rank1/d1/Piece.set_type('wq')
-	$Board/rank1/e1/Piece.set_type('wk')
-	$Board/rank1/f1/Piece.set_type('wb')
-	$Board/rank1/g1/Piece.set_type('wn')
-	$Board/rank1/h1/Piece.set_type('wr')
+	create_piece('w_rook', 'a1')
+	create_piece('w_knight', 'b1')
+	create_piece('w_bishop', 'c1')
+	create_piece('w_queen', 'd1')
+	create_piece('w_king', 'e1')
+	create_piece('w_bishop', 'f1')
+	create_piece('w_knight', 'g1')
+	create_piece('w_rook', 'h1')
 	
 	# Rank 2
-	$Board/rank2/a2/Piece.set_type('wp')
-	$Board/rank2/b2/Piece.set_type('wp')
-	$Board/rank2/c2/Piece.set_type('wp')
-	$Board/rank2/d2/Piece.set_type('wp')
-	$Board/rank2/e2/Piece.set_type('wp')
-	$Board/rank2/f2/Piece.set_type('wp')
-	$Board/rank2/g2/Piece.set_type('wp')
-	$Board/rank2/h2/Piece.set_type('wp')
+	create_piece('w_pawn', 'a2')
+	create_piece('w_pawn', 'b2')
+	create_piece('w_pawn', 'c2')
+	create_piece('w_pawn', 'd2')
+	create_piece('w_pawn', 'e2')
+	create_piece('w_pawn', 'f2')
+	create_piece('w_pawn', 'g2')
+	create_piece('w_pawn', 'h2')
 	
 	# Rank 7
-	$Board/rank7/a7/Piece.set_type('bp')
-	$Board/rank7/b7/Piece.set_type('bp')
-	$Board/rank7/c7/Piece.set_type('bp')
-	$Board/rank7/d7/Piece.set_type('bp')
-	$Board/rank7/e7/Piece.set_type('bp')
-	$Board/rank7/f7/Piece.set_type('bp')
-	$Board/rank7/g7/Piece.set_type('bp')
-	$Board/rank7/h7/Piece.set_type('bp')
+	create_piece('b_pawn', 'a7')
+	create_piece('b_pawn', 'b7')
+	create_piece('b_pawn', 'c7')
+	create_piece('b_pawn', 'd7')
+	create_piece('b_pawn', 'e7')
+	create_piece('b_pawn', 'f7')
+	create_piece('b_pawn', 'g7')
+	create_piece('b_pawn', 'h7')
 	
 	# Rank 8
-	$Board/rank8/a8/Piece.set_type('br')
-	$Board/rank8/b8/Piece.set_type('bn')
-	$Board/rank8/c8/Piece.set_type('bb')
-	$Board/rank8/d8/Piece.set_type('bq')
-	$Board/rank8/e8/Piece.set_type('bk')
-	$Board/rank8/f8/Piece.set_type('bb')
-	$Board/rank8/g8/Piece.set_type('bn')
-	$Board/rank8/h8/Piece.set_type('br')
+	create_piece('b_rook', 'a8')
+	create_piece('b_knight', 'b8')
+	create_piece('b_bishop', 'c8')
+	create_piece('b_queen', 'd8')
+	create_piece('b_king', 'e8')
+	create_piece('b_bishop', 'f8')
+	create_piece('b_knight', 'g8')
+	create_piece('b_rook', 'h8')
 	
 	
+# Create a new piece object
 func create_piece(type, loc):
+	# Create piece with attributes
 	var piece = piece_scene.instantiate()
 	piece.set_type(type)
 	piece.set_location(loc)
+	
+	# Set location square's piece to this
+	get_square(loc).set_piece(piece)
+	
+# Obtain square object at specific location
+func get_square(loc):
+	return get_node('Board/rank' + loc[1] + '/' + loc)
+	
+# Signal handler for square clicked
+func _on_square_clicked(loc):
+	if not curr_selection:
+		if get_square(loc).piece:
+			curr_selection = loc
+			get_square(loc).color = Color.RED
+	elif curr_selection == loc:
+		curr_selection = null
+		get_square(loc).reset_color()
+	else:
+		move_piece(curr_selection, loc)
+		get_square(curr_selection).reset_color()
+		curr_selection = null
+	
+# Move piece
+func move_piece(old, new):
+	var old_square = get_square(old)
+	var new_square = get_square(new)
+	var piece = old_square.piece
+	
+	new_square.set_piece(piece)
+	old_square.clear_piece()
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
