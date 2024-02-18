@@ -92,6 +92,7 @@ func is_valid_move(piece, new_loc):
 	
 	# Cannot move to square occupied by same team
 	if get_square(new_loc).piece and get_square(new_loc).piece.get_team() == team:
+		print('same team')
 		return false
 	
 	var old_num_loc = to_num_loc(piece.loc)
@@ -104,12 +105,15 @@ func is_valid_move(piece, new_loc):
 			if old_num_loc[0] == new_num_loc[0]:
 				for i in range(old_num_loc[1] + 1, new_num_loc[1]):
 					if get_square(to_str_loc([old_num_loc[0], i])).piece:
+						print('problem at ' + to_str_loc([old_num_loc[0], i]))
 						return false
 				return true
 			if old_num_loc[1] == new_num_loc[1]:
 				for i in range(old_num_loc[0] + 1, new_num_loc[0]):
-					if get_square(to_str_loc([old_num_loc[1], i])).piece:
+					if get_square(to_str_loc([i, old_num_loc[1]])).piece:
+						print('problem at ' + to_str_loc([i, old_num_loc[1]]))
 						return false
+				return true
 			return false
 		'knight':
 			return (abs(old_num_loc[0] - new_num_loc[0]) == 2 and abs(old_num_loc[1] - new_num_loc[1]) == 1) or (abs(old_num_loc[0] - new_num_loc[0]) == 1 and abs(old_num_loc[1] - new_num_loc[1]) == 2)
@@ -125,6 +129,7 @@ func to_num_loc(location):
 	return [location[0].unicode_at(0) - 'a'.unicode_at(0) + 1, int(location[1])]
 	
 func to_str_loc(location):
+	print('converting ' + str(location) + ' to ' + char('a'.unicode_at(0) + location[0] - 1) + str(location[1]))
 	return char('a'.unicode_at(0) + location[0] - 1) + str(location[1])
 	
 # Called when the node enters the scene tree for the first time.
