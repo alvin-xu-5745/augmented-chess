@@ -13,33 +13,8 @@ func clear():
 	type = null
 	loc = null
 	
-func is_valid_move(new_loc):
-	match type:
-		'b_pawn':
-			return
-		'b_rook':
-			return
-		'b_knight':
-			return
-		'b_bishop':
-			return
-		'b_queen':
-			return
-		'b_king':
-			return
-		'w_pawn':
-			return
-		'w_rook':
-			return
-		'w_knight':
-			return
-		'w_bishop':
-			return
-		'w_queen':
-			return
-		'w_king':
-			return
-		
+func get_team():
+	return type.split('_')[0]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

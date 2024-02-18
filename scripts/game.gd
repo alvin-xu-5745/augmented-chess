@@ -1,8 +1,5 @@
 extends Node
 
-# Light color: #e9daba
-# Dark color: #c3995a
-
 var piece_scene = preload("res://scenes/piece.tscn")
 
 var curr_selection = null
@@ -73,9 +70,9 @@ func _on_square_clicked(loc):
 		curr_selection = null
 		get_square(loc).reset_color()
 	else:
-		move_piece(curr_selection, loc)
-		get_square(curr_selection).reset_color()
-		curr_selection = null
+		if move_piece(curr_selection, loc):
+			get_square(curr_selection).reset_color()
+			curr_selection = null
 	
 # Move piece
 func move_piece(old, new):
@@ -83,8 +80,52 @@ func move_piece(old, new):
 	var new_square = get_square(new)
 	var piece = old_square.piece
 	
-	new_square.set_piece(piece)
-	old_square.clear_piece()
+	if is_valid_move(piece, new):
+		piece.set_location(new)
+		new_square.set_piece(piece)
+		old_square.clear_piece()
+		return true
+	return false
+	
+func is_valid_move(piece, new_loc):
+	var team = piece.type.split('_')[0]
+	
+	# Cannot move to square occupied by same team
+	if get_square(new_loc).piece and get_square(new_loc).piece.get_team() == team:
+		return false
+	
+	var old_num_loc = to_num_loc(piece.loc)
+	var new_num_loc = to_num_loc(new_loc)
+	
+	match piece.type.split('_')[1]:
+		'pawn':
+			return true
+		'rook':
+			if old_num_loc[0] == new_num_loc[0]:
+				for i in range(old_num_loc[1] + 1, new_num_loc[1]):
+					if get_square(to_str_loc([old_num_loc[0], i])).piece:
+						return false
+				return true
+			if old_num_loc[1] == new_num_loc[1]:
+				for i in range(old_num_loc[0] + 1, new_num_loc[0]):
+					if get_square(to_str_loc([old_num_loc[1], i])).piece:
+						return false
+			return false
+		'knight':
+			return (abs(old_num_loc[0] - new_num_loc[0]) == 2 and abs(old_num_loc[1] - new_num_loc[1]) == 1) or (abs(old_num_loc[0] - new_num_loc[0]) == 1 and abs(old_num_loc[1] - new_num_loc[1]) == 2)
+		'bishop':
+			return abs(old_num_loc[0] - new_num_loc[0]) == abs(old_num_loc[1] - new_num_loc[1])
+		'queen':
+			return old_num_loc[0] == new_num_loc[0] or old_num_loc[1] == new_num_loc[1] or abs(old_num_loc[0] - new_num_loc[0]) == abs(old_num_loc[1] - new_num_loc[1])
+		'king':
+			return abs(old_num_loc[0] - new_num_loc[0]) <= 1 and abs(old_num_loc[1] - new_num_loc[1]) <= 1
+	return false
+		
+func to_num_loc(location):
+	return [location[0].unicode_at(0) - 'a'.unicode_at(0) + 1, int(location[1])]
+	
+func to_str_loc(location):
+	return char('a'.unicode_at(0) + location[0] - 1) + str(location[1])
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
