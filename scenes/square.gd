@@ -24,15 +24,17 @@ var piece = null
 
 func set_piece(new_piece):
 	piece = new_piece
-	$Sprite.texture = sprites[piece.type]
 	
 func clear_piece():
 	piece = null
 	$Sprite.texture = null
 	
+func update_sprite():
+	$Sprite.texture = sprites[piece.type]
+	
 # Set color to default light or dark
 func reset_color():
-	if (String(name)[0].unicode_at(0) - 'a'.unicode_at(0) + 1 + int(String(name)[1])) % 2 == 0:
+	if (int(String(name).split('_')[0]) + int(String(name).split('_')[1])) % 2 == 0:
 		color = Color('c3995a')
 	else:
 		color = Color('e9daba')

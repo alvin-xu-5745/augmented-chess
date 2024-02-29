@@ -3,47 +3,49 @@ extends Node
 var piece_scene = preload("res://scenes/piece.tscn")
 
 var curr_selection = null
+var curr_team = null
+var all_pieces = []
 
 func init_board():
 	# Rank 1
-	create_piece('w_rook', 'a1')
-	create_piece('w_knight', 'b1')
-	create_piece('w_bishop', 'c1')
-	create_piece('w_queen', 'd1')
-	create_piece('w_king', 'e1')
-	create_piece('w_bishop', 'f1')
-	create_piece('w_knight', 'g1')
-	create_piece('w_rook', 'h1')
+	create_piece('w_rook', [1, 1])
+	create_piece('w_knight', [2, 1])
+	create_piece('w_bishop', [3, 1])
+	create_piece('w_queen', [4, 1])
+	create_piece('w_king', [5, 1])
+	create_piece('w_bishop', [6, 1])
+	create_piece('w_knight', [7, 1])
+	create_piece('w_rook', [8, 1])
 	
 	# Rank 2
-	create_piece('w_pawn', 'a2')
-	create_piece('w_pawn', 'b2')
-	create_piece('w_pawn', 'c2')
-	create_piece('w_pawn', 'd2')
-	create_piece('w_pawn', 'e2')
-	create_piece('w_pawn', 'f2')
-	create_piece('w_pawn', 'g2')
-	create_piece('w_pawn', 'h2')
+	create_piece('w_pawn', [1, 2])
+	create_piece('w_pawn', [2, 2])
+	create_piece('w_pawn', [3, 2])
+	create_piece('w_pawn', [4, 2])
+	create_piece('w_pawn', [5, 2])
+	create_piece('w_pawn', [6, 2])
+	create_piece('w_pawn', [7, 2])
+	create_piece('w_pawn', [8, 2])
 	
 	# Rank 7
-	create_piece('b_pawn', 'a7')
-	create_piece('b_pawn', 'b7')
-	create_piece('b_pawn', 'c7')
-	create_piece('b_pawn', 'd7')
-	create_piece('b_pawn', 'e7')
-	create_piece('b_pawn', 'f7')
-	create_piece('b_pawn', 'g7')
-	create_piece('b_pawn', 'h7')
+	create_piece('b_pawn', [1, 7])
+	create_piece('b_pawn', [2, 7])
+	create_piece('b_pawn', [3, 7])
+	create_piece('b_pawn', [4, 7])
+	create_piece('b_pawn', [5, 7])
+	create_piece('b_pawn', [6, 7])
+	create_piece('b_pawn', [7, 7])
+	create_piece('b_pawn', [8, 7])
 	
 	# Rank 8
-	create_piece('b_rook', 'a8')
-	create_piece('b_knight', 'b8')
-	create_piece('b_bishop', 'c8')
-	create_piece('b_queen', 'd8')
-	create_piece('b_king', 'e8')
-	create_piece('b_bishop', 'f8')
-	create_piece('b_knight', 'g8')
-	create_piece('b_rook', 'h8')
+	create_piece('b_rook', [1, 8])
+	create_piece('b_knight', [2, 8])
+	create_piece('b_bishop', [3, 8])
+	create_piece('b_queen', [4, 8])
+	create_piece('b_king', [5, 8])
+	create_piece('b_bishop', [6, 8])
+	create_piece('b_knight', [7, 8])
+	create_piece('b_rook', [8, 8])
 	
 	
 # Create a new piece object
@@ -53,12 +55,22 @@ func create_piece(type, loc):
 	piece.set_type(type)
 	piece.set_location(loc)
 	
+	# Add to list of all pieces
+	all_pieces.append(piece)
+	
 	# Set location square's piece to this
-	get_square(loc).set_piece(piece)
+	var square = get_square(loc)
+	square.set_piece(piece)
+	
+	# Update sprite
+	square.update_sprite()
 	
 # Obtain square object at specific location
 func get_square(loc):
-	return get_node('Board/rank' + loc[1] + '/' + loc)
+	return get_node('Board/rank' + str(loc[1]) + '/' + str(loc[0]) + '_' + str(loc[1]))
+	
+func get_piece(loc):
+	return get_node('Board/rank' + str(loc[1]) + '/' + str(loc[0]) + '_' + str(loc[1])).piece
 	
 # Signal handler for square clicked
 func _on_square_clicked(loc):
@@ -86,6 +98,9 @@ func move_piece(old, new):
 		old_square.clear_piece()
 		return true
 	return false
+	
+func get_valid_moves(piece):
+	return
 	
 func is_valid_move(piece, new_loc):
 	var team = piece.type.split('_')[0]
